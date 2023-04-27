@@ -64,11 +64,11 @@ main() {
   local wt_enabled
   wt_enabled="$(get_tmux_option "@catppuccin_window_tabs_enabled" "off")"
   readonly wt_enabled
-  
+
   local right_separator
   right_separator="$(get_tmux_option "@catppuccin_right_separator" "")"
   readonly right_separator
-  
+
   local left_separator
   left_separator="$(get_tmux_option "@catppuccin_left_separator" "")"
   readonly left_separator
@@ -99,7 +99,7 @@ main() {
   readonly show_directory_in_window_status="#[fg=$thm_bg,bg=$thm_blue] #I #[fg=$thm_fg,bg=$thm_gray] #{b:pane_current_path} "
 
   local show_directory_in_window_status_current
-  readonly show_directory_in_window_status_current="#[fg=$thm_bg,bg=$thm_orange] #I #[fg=$thm_fg,bg=$thm_bg] #{b:pane_current_path} "
+  readonly show_directory_in_window_status_current="#[fg=$thm_bg,bg=$thm_orange] #I #[fg=$thm_fg,bg=$thm_bg] #{b:pane_current_path}#{?window_zoomed_flag,*Z,} "
 
   local show_window_in_window_status
   readonly show_window_in_window_status="#[fg=$thm_fg,bg=$thm_bg] #W #[fg=$thm_bg,bg=$thm_blue] #I#[fg=$thm_blue,bg=$thm_bg]$left_separator#[fg=$thm_fg,bg=$thm_bg,nobold,nounderscore,noitalics] "
