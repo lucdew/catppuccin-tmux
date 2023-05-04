@@ -149,26 +149,35 @@ main() {
   set status-left ""
 
 
-  plugins=("ram_info" "cpu_info" "network_bandwidth" "sleep_weather")
+  IFS=' ' read -r -a plugins <<< $(get_tmux_option "@catppuccin-plugins" "ram_info cpu_info network_bandwidth weather")
 
   datafile=/tmp/.catppuccin-tmux-data
   show_fahrenheit=$(get_tmux_option "@catppuccin-show-fahrenheit" true)
   show_location=$(get_tmux_option "@catppuccin-show-location" true)
   fixed_location=$(get_tmux_option "@catppuccin-fixed-location")
 
+  network_bandwidth_interval=$(get_tmux_option "@catppuccin-network-bandwith-interval" "1")
+
   # start weather script in background
-  $PLUGIN_DIR/scripts/sleep_weather.sh $show_fahrenheit $show_location $fixed_location &
+
+  if [[ "${plugins[@]}" =~ "weather" ]]; then
+    $PLUGIN_DIR/scripts/sleep_weather.sh $show_fahrenheit $show_location $fixed_location &
+
+    while [ ! -f $datafile ]; do
+      sleep 0.01
+    done
+  fi
+
 
   # wait unit $datafile exists just to avoid errors
   # this should almost never need to wait unless something unexpected occurs
-  while [ ! -f $datafile ]; do
-    sleep 0.01
-  done
 
   status_right="${right_column1},${right_column2}"
   for plugin in "${plugins[@]}"; do
-      if [[ $plugin == "sleep_weather" ]] ; then
+      if [[ $plugin == "weather" ]] ; then
         script="#(cat $datafile)"
+      elif [[ $plugin == "network_bandwidth" ]] ; then
+        script="#($PLUGIN_DIR/scripts/$plugin.sh $network_bandwidth_interval)"
       else
         script="#($PLUGIN_DIR/scripts/$plugin.sh)"
       fi

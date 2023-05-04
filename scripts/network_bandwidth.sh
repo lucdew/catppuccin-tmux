@@ -3,7 +3,7 @@
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $current_dir/utils.sh
 
-INTERVAL="1"  # update interval in seconds
+INTERVAL=${1:-"1"}  # update interval in seconds
 DEFAULT_NETWORK_INTERFACE=$(ip route | grep '^default' | awk '{print $5}' | head -n1)
 
 network_name=$(get_tmux_option "@catppuccin-network-bandwidth" "$DEFAULT_NETWORK_INTERFACE")

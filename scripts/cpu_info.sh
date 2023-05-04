@@ -49,7 +49,7 @@ main() {
   else
     cpu_label=$(get_tmux_option "@catppuccin-cpu-usage-label" "CPU")
     cpu_percent=$(get_percent)
-    echo "$cpu_label$cpu_percent"
+    echo "$cpu_label $cpu_percent"
   fi
   sleep $RATE
 }
