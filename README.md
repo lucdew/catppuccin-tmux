@@ -68,7 +68,7 @@ set -g @catppuccin_window_tabs_enabled on # or off to disable window_tabs
 ##### Configure separator
 
 By default, the theme will use a round separator for left and right.
-To overwrite it use `@catppuccin_left_separator` and `@catppuccin_right_separator` 
+To overwrite it use `@catppuccin_left_separator` and `@catppuccin_right_separator`
 
 ```sh
 set -g @catppuccin_left_separator "█"
@@ -77,7 +77,7 @@ set -g @catppuccin_right_separator "█"
 
 ##### Enable DateTime
 
-By default, the `date_time` componenet is set to off.
+By default, the `date_time` component is set to off.
 It can be enabled by specifing any tmux date and time format.
 
 ```sh
@@ -86,8 +86,8 @@ set -g @catppuccin_date_time "%Y-%m-%d %H:%M"
 
 ##### Enable User
 
-By default, the `user` componenet is set to off.
-It can be enabled by toggoling it on.
+By default, the `user` component is set to off.
+It can be enabled by toggling it on.
 
 ```sh
 set -g @catppuccin_user "on"
@@ -95,11 +95,21 @@ set -g @catppuccin_user "on"
 
 ##### Enable Host
 
-By default, the `host` componenet is set to off.
-It can be enabled by toggoling it on.
+By default, the `host` component is set to off.
+It can be enabled by toggling it on.
 
 ```sh
 set -g @catppuccin_host "on"
+```
+
+##### Enable current command
+
+By default, the status right left component (right1) shows the window name.
+That toggle is to show the current_pane_command instead.
+It can be enabled by toggling it on.
+
+```sh
+set -g @catppuccin_current_command "on"
 ```
 
 [style-guide]: https://github.com/catppuccin/catppuccin/blob/main/docs/style-guide.md

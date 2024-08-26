@@ -85,6 +85,10 @@ main() {
   date_time="$(get_tmux_option "@catppuccin_date_time" "off")"
   readonly date_time
 
+  local current_command
+  current_command="$(get_tmux_option "@catppuccin_current_command" "off")"
+  readonly current_command
+
   # These variables are the defaults so that the setw and set calls are easier to parse.
   local show_directory
   readonly show_directory="#[fg=$thm_pink,bg=$thm_bg,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_bg,bg=$thm_pink,nobold,nounderscore,noitalics]  #[fg=$thm_fg,bg=$thm_gray] #{b:pane_current_path} #{?client_prefix,#[fg=$thm_red]"
@@ -116,6 +120,9 @@ main() {
   local show_date_time
   readonly show_date_time="#[fg=$thm_blue,bg=$thm_gray]$right_separator#[fg=$thm_bg,bg=$thm_blue] #[fg=$thm_fg,bg=$thm_gray] $date_time "
 
+  local show_command
+  readonly show_command="#[fg=$thm_pink,bg=$thm_bg,nobold,nounderscore,noitalics]$right_separator#[fg=$thm_bg,bg=$thm_pink,nobold,nounderscore,noitalics] #[fg=$thm_fg,bg=$thm_gray] #{pane_current_command} #{?client_prefix,#[fg=$thm_red]"
+
   # Right column 1 by default shows the Window name.
   local right_column1=$show_window
 
@@ -134,6 +141,10 @@ main() {
     window_status_current_format=$show_window_in_window_status_current
   fi
 
+  if [[ "${current_command}" == "on" ]]; then
+    right_column1=$show_command
+  fi
+
   if [[ "${user}" == "on" ]]; then
     right_column2=$right_column2$show_user
   fi
@@ -148,8 +159,7 @@ main() {
 
   set status-left ""
 
-
-  IFS=' ' read -r -a plugins <<< $(get_tmux_option "@catppuccin-plugins" "ram_info cpu_info network_bandwidth weather")
+  IFS=' ' read -r -a plugins <<<$(get_tmux_option "@catppuccin-plugins" "ram_info cpu_info network_bandwidth weather")
 
   datafile=/tmp/.catppuccin-tmux-data
   show_fahrenheit=$(get_tmux_option "@catppuccin-show-fahrenheit" true)
@@ -168,21 +178,20 @@ main() {
     done
   fi
 
-
   # wait unit $datafile exists just to avoid errors
   # this should almost never need to wait unless something unexpected occurs
 
   status_right="${right_column1},${right_column2}"
   for plugin in "${plugins[@]}"; do
-      if [[ $plugin == "weather" ]] ; then
-        script="#(cat $datafile)"
-      elif [[ $plugin == "network_bandwidth" ]] ; then
-        script="#($PLUGIN_DIR/scripts/$plugin.sh $network_bandwidth_interval)"
-      else
-        script="#($PLUGIN_DIR/scripts/$plugin.sh)"
-      fi
-      colors=(orange dark_gray)
-      status_right="#[fg=${!colors[1]},bg=${!colors[0]}] $script ${status_right}"
+    if [[ $plugin == "weather" ]]; then
+      script="#(cat $datafile)"
+    elif [[ $plugin == "network_bandwidth" ]]; then
+      script="#($PLUGIN_DIR/scripts/$plugin.sh $network_bandwidth_interval)"
+    else
+      script="#($PLUGIN_DIR/scripts/$plugin.sh)"
+    fi
+    colors=(orange dark_gray)
+    status_right="#[fg=${!colors[1]},bg=${!colors[0]}] $script ${status_right}"
   done
 
   set status-right "${status_right}"
